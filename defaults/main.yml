@@ -1,0 +1,8 @@
+---
+
+install_yubikeys: True
+create_yubikey_users: []
+yubikey_id: ""
+yubikey_key: ""
+sudo_root_users: []
+sudo_perun_users: []
