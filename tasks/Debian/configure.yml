@@ -1,0 +1,61 @@
+---
+- name: put users into /etc/yubico/authorized_yubikeys
+  lineinfile:
+    path: /etc/yubico/authorized_yubikeys
+    line: "{{ item }}:{{ yubikey_users[item].yubikey }}"
+  with_items: "{{ create_yubikey_users }}"
+
+- name: create users
+  user:
+    name: "{{ item }}"
+    comment: "{{ yubikey_users[item].name }}"
+    shell: /bin/bash
+  with_items: "{{ create_yubikey_users }}"
+
+- name: ensure groups
+  group:
+    name: "{{ item }}"
+  with_items: "{{ create_yubikey_users }}"
+
+- name: ensure users in groups
+  user:
+    name: "{{ item }}"
+    group: "{{ item }}"
+  with_items: "{{ create_yubikey_users }}"
+
+- name: create .ssh dirs
+  file:
+    path: "/home/{{ item }}/.ssh"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    state: directory
+    mode: 0700
+  with_items: "{{ create_yubikey_users }}"
+
+- name: create .ssh/authorized_keys
+  copy:
+    dest: "/home/{{ item }}/.ssh/authorized_keys"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    content: "{{ yubikey_users[item].sshkey }}"
+    force: no
+  with_items: "{{ create_yubikey_users }}"
+
+- name: ensure ssh keys in .ssh/authorized_keys
+  lineinfile:
+    path: "/home/{{ item }}/.ssh/authorized_keys"
+    line: "{{ yubikey_users[item].sshkey }}"
+  with_items: "{{ create_yubikey_users }}"
+
+- name: Add users to group sudo
+  user:
+    name: "{{ item }}"
+    groups: sudo
+    append: yes
+  with_items: "{{ sudo_root_users }}"
+
+- name: Add to sudoers
+  lineinfile:
+    path: "/etc/sudoers"
+    line: "{{ item }} ALL=(root) /bin/su - {{ perun_login }}"
+  with_items: "{{ sudo_perun_users }}"
