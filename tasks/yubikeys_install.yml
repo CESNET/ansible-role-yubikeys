@@ -7,7 +7,7 @@
 
 - name: Warning for default id and key
   fail:
-    msg: 'The key for the yubikey_id {{yubikey_id}} is insecure!!! Get a new one at https://upgrade.yubico.com/getapikey/'
+    msg: 'The key for the yubikey_id {{ yubikey_id }} is insecure!!! Get a new one at https://upgrade.yubico.com/getapikey/'
   ignore_errors: yes
   when: yubikey_id == "48695"
 
@@ -39,4 +39,3 @@
     path: "/etc/pam.d/sudo"
     insertafter: '#%PAM-1.0'
     line: "auth sufficient pam_yubico.so authfile=/etc/yubico/authorized_yubikeys id={{ yubikey_id }} key={{ yubikey_key }}"
-
