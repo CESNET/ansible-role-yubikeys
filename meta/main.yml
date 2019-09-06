@@ -3,11 +3,11 @@ dependencies: []
 
 galaxy_info:
   role_name: yubikeys
-  owner: pajavyskocil
-  author: pajavyskocil
+  author: Martin Kuba
+  company: CESNET
   description: Managing access to root by yubikeys.
   license: "license (BSD, MIT)"
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
     - name: Debian
       versions:
@@ -16,5 +16,3 @@ galaxy_info:
   galaxy_tags:
     - security
     - yubikeys
-
-allow_duplicates: true

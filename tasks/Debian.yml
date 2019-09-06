@@ -1,6 +1,0 @@
----
-- include_tasks: "Debian/install.yml"
-  when: action in ["install"]
-
-- include_tasks: "Debian/configure.yml"
-  when: action in ["install", "update"]

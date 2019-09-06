@@ -1,0 +1,42 @@
+---
+- name: check that id and key are defined
+  assert:
+    that:
+      - yubikey_id is defined
+      - yubikey_key is defined
+
+- name: Warning for default id and key
+  fail:
+    msg: 'The key for the yubikey_id {{yubikey_id}} is insecure!!! Get a new one at https://upgrade.yubico.com/getapikey/'
+  ignore_errors: yes
+  when: yubikey_id == "48695"
+
+- name: install sudo and libpam-yubico
+  apt:
+    name:
+      - sudo
+      - libpam-yubico
+    state: present
+
+- name: create /etc/yubico
+  file:
+    path: /etc/yubico
+    state: directory
+
+- name: create /etc/yubico/authorized_yubikeys
+  copy:
+    content: ""
+    dest: /etc/yubico/authorized_yubikeys
+    force: no
+
+- name: set permissions on /etc/pam.d/sudo
+  file:
+    path: /etc/pam.d/sudo
+    mode: 0600
+
+- name: add Yubikey PAM module to sudo
+  lineinfile:
+    path: "/etc/pam.d/sudo"
+    insertafter: '#%PAM-1.0'
+    line: "auth sufficient pam_yubico.so authfile=/etc/yubico/authorized_yubikeys id={{ yubikey_id }} key={{ yubikey_key }}"
+
