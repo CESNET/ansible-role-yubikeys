@@ -1,4 +1,9 @@
 ---
+- name: Check if 'root' is not in yubikey_lognames
+  fail:
+    msg: "Setting sshkey and yubikeyId for 'root' is not allowed"
+  when: "'root' in yubikey_lognames"
+
 - name: put users into /etc/yubico/authorized_yubikeys
   lineinfile:
     path: /etc/yubico/authorized_yubikeys
