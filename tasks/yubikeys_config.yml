@@ -44,7 +44,7 @@
     create: yes
     owner: "{{ item }}"
     group: "{{ item }}"
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |
       {% for key in yubikey_users[item].sshkeys -%}
         {{ key }}
