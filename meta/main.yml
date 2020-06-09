@@ -7,7 +7,7 @@ galaxy_info:
   company: CESNET
   description: Managing access to root by yubikeys.
   license: "license (BSD, MIT)"
-  min_ansible_version: 2.5
+  min_ansible_version: 2.9
   platforms:
     - name: Debian
       versions:
