@@ -35,7 +35,9 @@
     key: "{{ item.1 }}"
     state: present
   when: item.0.key in yubikey_lognames
-  loop: "{{ lookup('dict',yubikey_users)|subelements('value.sshkeys') }}"
+  loop: "{{ lookup('dict',yubikey_users)| subelements('value.sshkeys') }}"
+  loop_control:
+    label: "{{ item.0.key }}"
 
 - name: Add users to group sudo
   user:
