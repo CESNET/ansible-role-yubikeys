@@ -10,6 +10,7 @@
     regexp: "^{{ item }}:"
     line: "{{ item }}:{{ yubikey_users[item].yubikeys | join(':') }}"
   loop: "{{ yubikey_lognames }}"
+  when: yubikey_users[item].yubikeys is defined
 
 - name: create users
   user:
@@ -35,7 +36,7 @@
     key: "{{ item.1 }}"
     state: present
   when: item.0.key in yubikey_lognames
-  loop: "{{ yubikey_users | dict2items | subelements('value.sshkeys') }}"
+  loop: "{{ (yubikey_users | default({}, true)) | dict2items | subelements('value.sshkeys') }}"
   loop_control:
     label: "{{ item.0.key }}"
 
